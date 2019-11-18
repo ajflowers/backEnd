@@ -1,9 +1,9 @@
-// Update with your config settings.
+require('dotenv').config();
 
 module.exports = {
 
   development: {
-    client: 'pg',
+    client: "pg",
     useNullAsDefault: true,
     connection: {
       database: process.env.DB_DATABASE,
@@ -20,7 +20,7 @@ module.exports = {
 
 
   production: {
-    client: 'pg',
+    client: "pg",
     connection: process.env.DATABASE_URL,
     pool: {
       min: 2,
