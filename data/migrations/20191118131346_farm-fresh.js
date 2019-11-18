@@ -2,7 +2,7 @@
 exports.up = function (knex) {
     return knex.schema
     
-        .createTable('farmUsers', users => {
+        .createTable('farm_users', users => {
             users.increments();
 
             users
@@ -41,7 +41,7 @@ exports.up = function (knex) {
                 .integer('farmerID')
                 .unsigned()
                 .references('id')
-                .inTable('farmUsers')
+                .inTable('farm_users')
                 .onDelete('RESTRICT')
                 .onUpdate('CASCADE');
         })
@@ -130,12 +130,12 @@ exports.up = function (knex) {
 
 exports.down = function (knex) {
     return knex.schema
-        .dropTableIfExists('farmUsers')
-        .dropTableIfExists('customers')
-        .dropTableIfExists('farms')
-        .dropTableIfExists('items')
-        .dropTableIfExists('inventory')
-        .dropTableIfExists('orders')
-        .dropTableIfExists('orderDetails')
+    .dropTableIfExists('orderDetails')
+    .dropTableIfExists('orders')
+    .dropTableIfExists('inventory')
+    .dropTableIfExists('items')
+    .dropTableIfExists('farms')
+    .dropTableIfExists('customers')
+    .dropTableIfExists('farmUsers')
 
 };
