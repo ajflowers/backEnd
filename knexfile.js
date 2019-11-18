@@ -7,7 +7,7 @@ module.exports = {
     useNullAsDefault: true,
     connection: {
       database: process.env.DB_DATABASE,
-      user: process.env.DB_DV_USER,
+      user: process.env.DB_DEV_USER,
       password: process.env.DB_DEV_PASSWORD
     },
     migrations: {
