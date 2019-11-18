@@ -1,5 +1,5 @@
 {
-  "name": "backEnd",
+  "name": "farm-fresh-produce",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,23 +12,27 @@
     "type": "git",
     "url": "git+https://github.com/farmFreshProduce/backEnd.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Angela Flowers and Sheila Eichenberger",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/farmFreshProduce/backEnd/issues"
   },
   "homepage": "https://github.com/farmFreshProduce/backEnd#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^3.21.2",
+    "jsonwebtoken": "^8.5.1",
     "knex": "^0.20.2",
     "morgan": "^1.9.1",
     "pg": "^7.12.1"
   },
   "devDependencies": {
-    "nodemon": "^1.19.4"
+    "cross-env": "^6.0.3",
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.4",
+    "supertest": "^4.0.2"
   }
 }
