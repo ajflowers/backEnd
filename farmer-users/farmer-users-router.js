@@ -1,4 +1,6 @@
 const router = require('express').Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const Farmers = require('./farmer-users-model.js');
 const restricted = require('../auth/restricted-middleware.js');
@@ -36,6 +38,7 @@ router.post('/register', (req, res) => {
         
         Farmers.add(user)
         .then(saved => {
+            console.log(saved);
             res.status(201).json(saved);
         })
         .catch(error => {
@@ -77,15 +80,16 @@ function generateToken(user) {
     const payload = {
         subject: user.id,
         username: user.username,
-        role: "student" //probably come from db
+        role: "farmer" 
     };
     
+    const secret = 'secret';
     
     const options = { 
         expiresIn: "1d"
     };
     
-    return jwt.sign(payload, secrets.jwtSecret, options);
+    return jwt.sign(payload, secret, options);
 }
 
 router.post('/farmers/logout', restricted, async (req, res) => {
