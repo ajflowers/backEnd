@@ -37,7 +37,8 @@ router.post('/register', (req, res) => {
         
         Farmers.add(user)
         .then(saved => {
-            res.status(201).json(user);
+            console.log(saved);
+            res.status(201).json(saved);
         })
         .catch(error => {
             res.status(500).json(error);
@@ -77,10 +78,11 @@ function generateToken(user) {
     
     const payload = {
         subject: user.id,
-        username: user.username
+        username: user.username,
+        role: "farmer" 
     };
     
-    const secret = process.env.JWT_SECRET || "is it secret, is it safe?";
+    const secret = 'secret';
     
     const options = { 
         expiresIn: "1d"

@@ -12,11 +12,12 @@ function find() {
 }
 
 function findBy(filter) {
+  //include role info here
   return db('farm_users').where(filter);
 }
 
 async function add(user) {
-  const [newuser] = await db('farm_users').insert(user).returning('username');
+  const [newuser] = await db('farm_users').insert(user).returning('*');
 
   return newuser;
 }

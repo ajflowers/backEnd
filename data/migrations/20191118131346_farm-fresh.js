@@ -130,12 +130,12 @@ exports.up = function (knex) {
 
 exports.down = function (knex) {
     return knex.schema
-    .dropTableIfExists('orderDetails')
-    .dropTableIfExists('orders')
-    .dropTableIfExists('inventory')
-    .dropTableIfExists('items')
-    .dropTableIfExists('farms')
-    .dropTableIfExists('customers')
-    .dropTableIfExists('farmUsers')
+        .dropTableIfExists('orderDetails')
+        .dropTableIfExists('orders')
+        .dropTableIfExists('inventory')
+        .dropTableIfExists('items')
+        .dropTableIfExists('farms')
+        .dropTableIfExists('customers')
+        .dropTableIfExists('farmUsers');       
 
 };
