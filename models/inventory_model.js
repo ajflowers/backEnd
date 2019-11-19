@@ -5,7 +5,8 @@ module.exports = {
   find,
   findBy,
   findById,
-  update
+  update,
+  remove
 };
 
 function find() {
@@ -31,10 +32,16 @@ function findById(id) {
     .select();
 };
 
-async function update(item) {
+async function update(newInfo, id) {
     const [updatedItem] = await db("inventory")
         .where({ id })
-        .update(updatedItem, ["id", "itemID", "quantity"]);
+        .update(newInfo, ["id", "item", "quantity"]);
         
-    return db("inventory");
+    return updatedItem;
 };
+
+function remove(id) {
+  return db('inventory')
+    .where({id})
+    .del();
+}
