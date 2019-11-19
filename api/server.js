@@ -6,6 +6,7 @@ const cors = require('cors');
 const farmerUserRouter = require('../routes/farmer-users-router.js');
 const customerUserRouter = require('../routes/customer-users-router.js');
 const farmRouter = require('../routes/farms_route.js');
+const inventoryRouter = require('../routes/inventory_route.js');
 
 const validateToken = require('../auth/restricted-middleware.js');
 
@@ -20,7 +21,7 @@ server
 server.use('/api/farmers', farmerUserRouter);
 server.use('/api/customers', customerUserRouter);
 server.use('/api/farms', validateToken, farmRouter);
-
+server.use('/api/inventory', validateToken, inventoryRouter);
 
 
 server.get('/', (req, res) => {
