@@ -27,7 +27,7 @@ router.post('/', (req, res) => {
         farmerID: req.decodedJwt.subject
     };
 
-    console.log(farmSpecs);
+    // console.log(farmSpecs);
         if (req.decodedJwt.role === 'farmer') {
         Farms
             .add(farmSpecs)
