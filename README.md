@@ -37,7 +37,7 @@ Each takes a JSON object with `username` and `password` keys:
 
 - `DELETE /api/inventory/:inventoryID`
 
-## Protected endpoints for users logged in as farmer:
+## Protected endpoints for users logged in as customer:
 
 - `GET /api/farms` returns list of farms (excluding those with `farm_name: null`)
 
