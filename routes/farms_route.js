@@ -44,10 +44,12 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
     const farmID = req.params.id;
-
+    const newInfo = req.body;
+    console.log(`PUT /farms/${farmID}`, newInfo);
+    
     if (req.decodedJwt.role === 'farmer') {
         Farms
-            .update(req.body)
+            .update(newInfo, farmID)
             .then(saved => {
                 console.log(saved);
                 res.status(201).json(saved);

@@ -29,8 +29,10 @@ function findById(id) {
       .first();
 }
 
-async function update(farmInfo) {
-    const [updatedFarm] = await db('farms').update(farm).returning('*');
+async function update(farmInfo, id) {
+    const [updatedFarm] = await db('farms')
+        .where({id})
+        .update(farmInfo, ['*']);
   
     return updatedFarm;
 }
