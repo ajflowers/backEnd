@@ -5,6 +5,7 @@ module.exports = {
     find,
     findBy,
     findById,
+    update
 }
 
 function find() {
@@ -26,4 +27,10 @@ function findById(id) {
     return db('farms')
       .where({ id })
       .first();
+}
+
+async function update(farmInfo) {
+    const [updatedFarm] = await db('farms').update(farm).returning('*');
+  
+    return updatedFarm;
 }

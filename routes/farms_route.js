@@ -27,8 +27,7 @@ router.post('/', (req, res) => {
         farmerID: req.decodedJwt.subject
     };
 
-    console.log(farmSpecs);
-        if (req.decodedJwt.role === 'farmer') {
+    if (req.decodedJwt.role === 'farmer') {
         Farms
             .add(farmSpecs)
             .then(saved => {
@@ -39,8 +38,28 @@ router.post('/', (req, res) => {
                 res.status(500).json(error);
             });
     } else {
-        res.status(401).json({ message: 'Only farmers can add a new farm' });
+        res.status(401).json({ message: 'You do not have the correct user role for this action.' });
     }    
 });
+
+router.put('/:id', (req, res) => {
+    const farmID = req.params.id;
+
+    if (req.decodedJwt.role === 'farmer') {
+        Farms
+            .update(req.body)
+            .then(saved => {
+                console.log(saved);
+                res.status(201).json(saved);
+            })
+            .catch(error => {
+                res.status(500).json(error);
+            });
+    } else {
+        res.status(401).json({ message: 'You do not have the correct user role for this action.' });
+    }    
+
+})
+
 
 module.exports = router;
