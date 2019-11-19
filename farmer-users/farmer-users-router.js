@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 const Farmers = require('./farmer-users-model.js');
 const restricted = require('../auth/restricted-middleware.js');
 const { validateUser } = require('../customer-users/customer-users-helpers.js');
@@ -58,7 +57,7 @@ router.post('/login', (req, res) => {
     Farmers.findBy({ username })
     .first()
     .then(user => {
-        // console.log("USER>>>", user)
+        console.log("USER>>>", user)
         if (user && bcrypt.compareSync(password, user.password)) {
             const token = generateToken(user);
             console.log("TOKEN///", token)
@@ -83,7 +82,7 @@ function generateToken(user) {
         role: "farmer" 
     };
     
-    const secret = 'secret';
+    const secret = process.env.JWT_SECRET || "is it secret? is it safe?";
     
     const options = { 
         expiresIn: "1d"

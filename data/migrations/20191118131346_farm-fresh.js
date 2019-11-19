@@ -122,10 +122,7 @@ exports.up = function (knex) {
                 .integer('quantity')
                 .unsigned()
                 .notNullable();
-
-        })
-
-    
+        });    
 };
 
 exports.down = function (knex) {
@@ -136,6 +133,5 @@ exports.down = function (knex) {
         .dropTableIfExists('items')
         .dropTableIfExists('farms')
         .dropTableIfExists('customers')
-        .dropTableIfExists('farmUsers');       
-
+        .dropTableIfExists('farmUsers');
 };

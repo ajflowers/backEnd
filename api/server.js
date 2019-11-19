@@ -5,6 +5,9 @@ const cors = require('cors');
 
 const farmerUserRouter = require('../farmer-users/farmer-users-router.js');
 const customerUserRouter = require('../customer-users/customer-users-router.js');
+const farmRouter = require('../routes/farms_route.js');
+
+const validateToken = require('../auth/restricted-middleware.js');
 
 const server = express();
 
@@ -16,6 +19,7 @@ server
 
 server.use('/api/farmers', farmerUserRouter);
 server.use('/api/customers', customerUserRouter);
+server.use('/api/farms', validateToken, farmRouter);
 
 
 
