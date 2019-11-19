@@ -1,30 +1,10 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const Farmers = require('./farmer-users-model.js');
+
+const Customers = require('../models/customer-users-model.js');
 const restricted = require('../auth/restricted-middleware.js');
-const { validateUser } = require('../customer-users/customer-users-helpers.js');
-
-
-router.get('/', restricted, checkRole(["farmer", "customer"]), (req, res) => {
-  Farmers.find()
-    .then(farmers => {
-      res.json(farmers);
-    })
-    .catch(err => res.send(err));
-});
-
-
-function checkRole(roles) {
-    return function (req, res, next) {
-        if (roles.includes(req.decodedJwt.role)) {
-            next();
-        } else {
-            res.status(403).json({ message: "You do not have the required credentials to enter here." });
-        }
-    }
-};
-
+const { validateUser } = require('../auth/users-helpers.js');
 
 router.post('/register', (req, res) => {
     let user = req.body;
@@ -35,7 +15,7 @@ router.post('/register', (req, res) => {
         const hash = bcrypt.hashSync(user.password, 10);
         user.password = hash;
         
-        Farmers.add(user)
+        Customers.add(user)
         .then(saved => {
             console.log(saved);
             res.status(201).json(saved);
@@ -54,10 +34,10 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
     let { username, password } = req.body;
     
-    Farmers.findBy({ username })
+    Customers.findBy({ username })
     .first()
     .then(user => {
-        console.log("USER>>>", user)
+        // console.log("USER>>>", user)
         if (user && bcrypt.compareSync(password, user.password)) {
             const token = generateToken(user);
             console.log("TOKEN///", token)
@@ -79,7 +59,7 @@ function generateToken(user) {
     const payload = {
         subject: user.id,
         username: user.username,
-        role: "farmer" 
+        role: "customer" 
     };
     
     const secret = process.env.JWT_SECRET || "is it secret? is it safe?";
@@ -91,7 +71,31 @@ function generateToken(user) {
     return jwt.sign(payload, secret, options);
 }
 
-router.post('/farmers/logout', restricted, async (req, res) => {
+
+
+
+
+// router.get('/', restricted, checkRole(["farmer", "customer"]), (req, res) => {
+//   Users.find()
+//     .then(users => {
+//       res.json(users);
+//     })
+//     .catch(err => res.send(err));
+// });
+
+
+// function checkRole(roles) {
+//     return function (req, res, next) {
+//         if (roles.includes(req.decodedJwt.role)) {
+//             if(role)
+//             next();
+//         } else {
+//             res.status(403).json({ message: "You do not have the required credentials to enter here." });
+//         }
+//     }
+// };
+
+router.post('/users/logout', restricted, async (req, res) => {
     // Log user out of the application
     try {
         req.user.tokens = req.user.tokens.filter((token) => {
