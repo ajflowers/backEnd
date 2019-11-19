@@ -2,7 +2,7 @@
 exports.up = function (knex) {
     return knex.schema
     
-        .createTable('farm_users', users => {
+        .createTable('farmers', users => {
             users.increments();
 
             users
@@ -11,6 +11,15 @@ exports.up = function (knex) {
                 .unique();
 
             users.varchar('password', 255).notNullable();
+
+            users
+                .varchar('farm_name', 255)
+                .defaultTo(null);
+
+                users
+                .varchar('farm_address', 255)
+                .defaultTo(null);
+
         })
 
     
@@ -25,26 +34,26 @@ exports.up = function (knex) {
             users.varchar('password', 255).notNullable();
         })
 
-        .createTable('farms', farms => {
-            farms.increments();
+        // .createTable('farms', farms => {
+        //     farms.increments();
 
-            farms
-                .varchar('name', 255)
-                .notNullable()
-                .unique();
+        //     farms
+        //         .varchar('name', 255)
+        //         .notNullable()
+        //         .unique();
 
-            farms
-                .varchar('address', 255)
-                .notNullable();
+        //     farms
+        //         .varchar('address', 255)
+        //         .notNullable();
 
-            farms
-                .integer('farmerID')
-                .unsigned()
-                .references('id')
-                .inTable('farm_users')
-                .onDelete('RESTRICT')
-                .onUpdate('CASCADE');
-        })
+        //     farms
+        //         .integer('farmerID')
+        //         .unsigned()
+        //         .references('id')
+        //         .inTable('farm_users')
+        //         .onDelete('RESTRICT')
+        //         .onUpdate('CASCADE');
+        // })
 
         .createTable('items', items => {
             items.increments();
@@ -63,10 +72,10 @@ exports.up = function (knex) {
                 .onUpdate('CASCADE');
 
             inv
-                .integer('farmID')
+                .integer('farm_id')
                 .unsigned()
                 .references('id')
-                .inTable('farms')
+                .inTable('farmers')
                 .onDelete('RESTRICT')
                 .onUpdate('CASCADE');
 
@@ -87,19 +96,28 @@ exports.up = function (knex) {
                 .onUpdate('CASCADE');
 
             orders
-                .integer('farm')
+                .integer('farm_id')
                 .unsigned()
                 .references('id')
-                .inTable('farms')
+                .inTable('farmers')
                 .onDelete('RESTRICT')
                 .onUpdate('CASCADE');
+
+            orders 
+                .varchar('customer_name', 255)
+                .notNullable();
+
+            orders 
+                .varchar('customer_email', 255)
+                .notNullable();
+
 
             orders.timestamp('order_date');
             orders.boolean('filled').defaultTo(false);
             orders.boolean('picked_up').defaultTo(false);
         })
 
-        .createTable('orderDetails', details => {
+        .createTable('order_details', details => {
             details.increments();
 
             details
@@ -127,11 +145,19 @@ exports.up = function (knex) {
 
 exports.down = function (knex) {
     return knex.schema
-        .dropTableIfExists('orderDetails')
+        .dropTableIfExists('orderDetails') //deprecate after next migration
+
+        .dropTableIfExists('order_details')
         .dropTableIfExists('orders')
         .dropTableIfExists('inventory')
         .dropTableIfExists('items')
         .dropTableIfExists('farms')
         .dropTableIfExists('customers')
-        .dropTableIfExists('farmUsers');
+
+        .dropTableIfExists('farm_users') //deprecate after next migration
+        
+        .dropTableIfExists('farmers');
+        
+
+
 };
