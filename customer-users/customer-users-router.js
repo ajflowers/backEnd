@@ -62,7 +62,7 @@ function generateToken(user) {
         role: "customer" 
     };
     
-    const secret = 'secret';
+    const secret = process.env.JWT_SECRET || "is it secret? is it safe?";
     
     const options = { 
         expiresIn: "1d"

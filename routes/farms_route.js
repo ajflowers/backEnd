@@ -21,10 +21,26 @@ router.get('/:farmID', (req, res) => {
         .catch(err => res.status(500).json(err));
 });
 
-router.post('/:farmer', (req, res) => {
-    const { farmID } = req.params;
+router.post('/', (req, res) => {
+    let farmSpecs = {
+        ...req.body,
+        farmerID: req.decodedJwt.subject
+    };
 
-    let farmSpecs = req.body;
-    Farms
-        .
-})
+    console.log(farmSpecs);
+        if (req.decodedJwt.role === 'farmer') {
+        Farms
+            .add(farmSpecs)
+            .then(saved => {
+                console.log(saved);
+                res.status(201).json(saved);
+            })
+            .catch(error => {
+                res.status(500).json(error);
+            });
+    } else {
+        res.status(401).json({ message: 'Only farmers can add a new farm' });
+    }    
+});
+
+module.exports = router;
