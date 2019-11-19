@@ -8,22 +8,22 @@ module.exports = {
 }
 
 function find() {
-    return db('customers').select();
+    return db('orders').select();
 }
 
 function findBy(filter) {
     //include role info here
-    return db('customers').where(filter);
+    return db('orders').where(filter);
 }
 
-async function add(customers) {
-    const [newCustomer] = await db('customers').insert(customers).returning('*');
+async function add(order) {
+    const [newOrder] = await db('orders').insert(orders).returning('*');
   
-    return newCustomer;
+    return newOrder;
 }
   
 function findById(id) {
-    return db('customers')
+    return db('orders')
       .where({ id })
       .first();
 }

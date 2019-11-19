@@ -1,34 +1,34 @@
 const router = require('express').Router();
-const Customers = require('../helpers/customer_helper.js');
+const Orders = require('../helpers/orders_helper.js/index.js');
 
-router.get('/', (req, res) => {
-    Customers
+router.get('/:customerID/orders', (req, res) => {
+    Orders
         .find()
-        .then(customers => res.status(200).json(customers))
+        .then(orders => res.status(200).json(orders))
         .catch(err => res.status(500).json(err));
 });
 
-router.get('/:customerID', (req, res) => {
-    const { customerID } = req.params;
+router.get('/:customerID/orders/:orderID', (req, res) => {
+    const { orderID } = req.params;
 
-    Customers
-        .findById(customerID)
-        .then(customer => res.status(200).json(customer))
+    Orders
+        .findById(orderID)
+        .then(order => res.status(200).json(order))
         .catch(err => res.status(500).json(err));
 });
 
-router.post('/', (req, res) => {
-    let customerSpecs = {
+router.post('/:customerID/orders', (req, res) => {
+    let orderSpecs = {
         ...req.body,
-        cusotmerID: req.decodedJwt.subject
+        orderID: req.decodedJwt.subject
     };
 
     if (req.decodedJwt.role === 'customer') {
-        Customers
-            .add(cusomerSpecs)
-            .then(saved => res.status(201.json(saved)))
+        Order
+            .add(orderSpecs)
+            .then(saved => res.status(201).json(saved))
             .catch(err => res.status(500).json(err));
     } else {
         res.status(401).json({ message: 'You should be logged in as a customer to see this.'})
     }
-})
+});
