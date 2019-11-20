@@ -46,49 +46,41 @@ router.get('/:id', (req, res) => {
     }
 }) 
 
-router.post('/', validateCustomer, async, (req, res) => {
+router.post('/', validateCustomer, async (req, res) => {
     const {farm_id, customer_name, customer_email, items_ordered} = req.body;
     const customer_id = req.decodedJwt.subject;
-    const role = req.decodedJwt.role;    
+    const now = new Date();
+    const order_date = now.toISOString();
 
-        if (items_ordered || items_ordered.length === 0) {
-            res.status(400).json({ message: "You must seect at least one item to place an order"})
-        } else {
-            try{
-                const newOrder = await Orders.add.add({
-                    customer_id,
-                    farm_id,
-                    customer_name,
-                    customer_email,
-                    order_date: Date.now()
-                });
+    if (!items_ordered || items_ordered.length === 0) {
+        res.status(400).json({ message: 'You must select at least one item to place an order' });
+    } else {
+        try{
+            const newOrder = await Orders.add({
+                customer_id,
+                farm_id,
+                customer_name,
+                customer_email,
+                order_date 
+            });
 
-                const newDetails = Promise.all(items_ordered.map(item => {
-                    await OrderDetails.add(item);
-                }));
-                res.status(201).json({
-                    ...newOrder,
-                    items_ordered: newDetails
-                });
+            const newDetails = await Promise.all(items_ordered.map(async item => 
+                await OrderDetails.add({
+                    order_id: newOrder.id,
+                    item: item.item, //oh god did I really type this line
+                    quantity: item.quantity
+                })
+            ));
 
-            } catch (error) {
-                return res.status(500.json(error))
-            }
+            res.status(201).json({
+                ...newOrder,
+                items_ordered: newDetails
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).json(error);
         }
-    Orders
-        .add({
-            customer_id,
-            farm_id,
-            customer_name,
-            customer_email,
-            order_date: Date.now()                               
-        })
-        .then(newOrder => {
-            let order_id = newOrder.id;
-            items_ordered.map(item => )
-
-        })
-        .catch(err => res.status(500).json(err));
+    }  
 
 });
 
