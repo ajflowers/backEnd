@@ -71,30 +71,6 @@ function generateToken(user) {
     return jwt.sign(payload, secret, options);
 }
 
-
-
-
-
-// router.get('/', restricted, checkRole(["farmer", "customer"]), (req, res) => {
-//   Users.find()
-//     .then(users => {
-//       res.json(users);
-//     })
-//     .catch(err => res.send(err));
-// });
-
-
-// function checkRole(roles) {
-//     return function (req, res, next) {
-//         if (roles.includes(req.decodedJwt.role)) {
-//             if(role)
-//             next();
-//         } else {
-//             res.status(403).json({ message: "You do not have the required credentials to enter here." });
-//         }
-//     }
-// };
-
 router.post('/users/logout', restricted, async (req, res) => {
     // Log user out of the application
     try {

@@ -38,8 +38,7 @@ router.get('/:id', (req, res) => {
     const getDetails = OrderDetails.findByOrder(id)
 
     Promise.all([getOrder, getDetails])
-        .then(values => {
-            const [order, items_ordered] = values;
+        .then(([order, items_ordered]) => {
             if(( role === 'customer' && order.customer_id === userID ) || ( role === 'farmer' && order.farm_id === userID )) {
                 res.status(200).json({
                     ...order,

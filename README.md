@@ -23,11 +23,11 @@ Each takes a JSON object with `username` and `password` keys:
   "farm_address": "123 Fake St, Anytown, USA"
 }```
 
-- `PUT /api/farms/`
+- `PUT /api/farms`
     - Updates farm info; farm ID will be provided by farmer token. takes `farm_name` and/or `farm_address` key/value pairs in JSON object.
 
 - `POST /api/inventory`
-    - adds new inventory item, example: `{ item: "apples", quantity: 100 } - returns new inventory item with unique id (inventory id numbers are unique to each entry and are not repeated between farmers)
+    - adds new inventory item, example: `{ item: "apples", quantity: 100 }` - returns new inventory item with unique id (inventory id numbers are unique to each entry and are not repeated between farmers)
 
 - `GET /api/inventory`
     - returns all inventory items for logged-in user

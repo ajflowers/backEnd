@@ -1,29 +1,11 @@
 const db = require('../data/dbConfig.js');
 
-module.exports = {
-    add,
-    find,
-    findBy,
-    findById,
+modules.exports = {
+    validateStock
 }
 
-function find() {
-    return db('orders').select();
-}
+const validateStock = async (req, res, next) => {
+    const items = req.body.items_ordered;
 
-function findBy(filter) {
-    //include role info here
-    return db('orders').where(filter);
-}
-
-async function add(order) {
-    const [newOrder] = await db('orders').insert(orders).returning('*');
-  
-    return newOrder;
-}
-  
-function findById(id) {
-    return db('orders')
-      .where({ id })
-      .first();
+    
 }
