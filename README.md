@@ -42,3 +42,24 @@ Each takes a JSON object with `username` and `password` keys:
 - `GET /api/farms` returns list of farms (excluding those with `farm_name: null`)
 
 - `GET /api/inventory/:farmID` returns all inventory for specified farm ID
+
+- `PUT /api/orders` creates new order by taking an object of the type:
+```
+{
+    "farm_id": 2, //farm being ordered from
+    "customer_name": "Alice",
+    "customer_email": "alice@isp.net",
+    "items_ordered": [ //array cannot be empty
+        {
+            "inventory_id": 3, // unique inventory ID
+            "item": "potatoes",
+            "quantity": 12
+        },
+                {
+            "inventory_id": 8,
+            "item": "pumpkins",
+            "quantity": 2
+        }
+    ] 
+}
+```
