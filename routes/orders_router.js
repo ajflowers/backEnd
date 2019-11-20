@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const Orders = require('../models/orders-model.js');
+const OrderDetails = require('../models/order-details-model.js');
+
 
 const {validateCustomer, validateFarmer} = require('../auth/validate-roles.js');
 
@@ -44,11 +46,35 @@ router.get('/:id', (req, res) => {
     }
 }) 
 
-router.post('/', validateCustomer, (req, res) => {
+router.post('/', validateCustomer, async, (req, res) => {
     const {farm_id, customer_name, customer_email, items_ordered} = req.body;
     const customer_id = req.decodedJwt.subject;
     const role = req.decodedJwt.role;    
 
+        if (items_ordered || items_ordered.length === 0) {
+            res.status(400).json({ message: "You must seect at least one item to place an order"})
+        } else {
+            try{
+                const newOrder = await Orders.add.add({
+                    customer_id,
+                    farm_id,
+                    customer_name,
+                    customer_email,
+                    order_date: Date.now()
+                });
+
+                const newDetails = Promise.all(items_ordered.map(item => {
+                    await OrderDetails.add(item);
+                }));
+                res.status(201).json({
+                    ...newOrder,
+                    items_ordered: newDetails
+                });
+
+            } catch (error) {
+                return res.status(500.json(error))
+            }
+        }
     Orders
         .add({
             customer_id,
@@ -59,7 +85,7 @@ router.post('/', validateCustomer, (req, res) => {
         })
         .then(newOrder => {
             let order_id = newOrder.id;
-            items_ordered.map
+            items_ordered.map(item => )
 
         })
         .catch(err => res.status(500).json(err));
