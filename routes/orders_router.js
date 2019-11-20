@@ -8,11 +8,11 @@ const {validateCustomer, validateFarmer} = require('../auth/validate-roles.js');
 
 router.get('/', (req, res) => {
     const role = req.decodedJwt.role;
-    const farm_id = req.decodedJwt.subject;
+    const id = req.decodedJwt.subject;
 
     if (role === 'farmer') {
         Orders
-            .findBy({ farm_id })
+            .findBy({ farm_id: id })
             .then(items => {
                 res.status(200).json(items)
             })
@@ -20,7 +20,7 @@ router.get('/', (req, res) => {
 
     } else if (role === 'customer') {
         Orders
-            .findBy({ customer_id })
+            .findBy({ customer_id: id })
             .then(orders => res.status(200).json(orders))
             .catch(err => res.status(500).json(err));
     } else {
@@ -30,19 +30,30 @@ router.get('/', (req, res) => {
 
 
 router.get('/:id', (req, res) => {
-    const order_id = req.params.id;
+    const id = req.params.id;
+    const role = req.decodedJwt.role;
+    const userID = req.decodedJwt.subject;
 
-    if (order_id) {
-        Orders
-            .findBy({order_id})
-            .then(order => {
-                res.status(200).json(order)
-            })
-            .catch(err => res.status(500).json(err));
+    const getOrder = Orders.findById(id);
+    const getDetails = OrderDetails.findByOrder(id)
 
-    } else {
-        res.status(401).json({ message: 'You do not have the correct user role for this action.' });
-    }
+    Promise.all([getOrder, getDetails])
+        .then(values => {
+            let order = values[0];
+            let items_ordered = values [1];
+            if(( role === 'customer' && order.customer_id === userID ) || ( role === 'farmer' && order.farm_id === userID )) {
+                res.status(200).json({
+                    ...order,
+                    items_ordered
+                })
+            } else {
+                res.status(401).json({message: 'This order does not belong to you.'})
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json(err);
+        });
 }) 
 
 router.post('/', validateCustomer, async (req, res) => {
@@ -83,20 +94,16 @@ router.post('/', validateCustomer, async (req, res) => {
 
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', validateFarmer, (req, res) => {
     const id = req.params.id;
     const newInfo = req.body;
     
-    if (req.decodedJwt.role === 'customer') {
-        Orders
-            .update(newInfo, id)
-            .then(updated => {
-                res.status(201).json(updated);
-            })
-            .catch(err => res.status(500).json(err));
-    } else {
-        res.status(401).json({ message: 'You do not have the correct user role for this action.' });
-    }
+    Orders
+        .update(newInfo, id)
+        .then(updated => {
+            res.status(201).json(updated);
+        })
+        .catch(err => res.status(500).json(err));
 });
 
 router.delete('/:id', (req, res) => {
