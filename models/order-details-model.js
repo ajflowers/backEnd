@@ -5,43 +5,27 @@ module.exports = {
   find,
   findBy,
   findById,
-  update,
-  remove
 };
 
 function find() {
-  return db("order_detail").select();
+  return db("order_details").select();
 };
 
 function findBy(filter) {
-  return db("order_detail").where(filter);
+  return db("order_details").where(filter);
 };
 
 async function add(item) {
-  const [newItem] = await db("order_detail")
+  const [newItem] = await db("order_details")
     .insert(item)
-    .returning("*");
+    .returning(["item", "quantity"]);
 
   return newItem;
 };
 
 function findById(id) {
-  return db("order_detail")
+  return db("order_details")
     .where({ id })
     .first()
     .select();
 };
-
-async function update(newInfo, id) {
-    const [updatedItem] = await db("order_detail")
-        .where({ id })
-        .update(newInfo, ["id", "item", "quantity"]);
-        
-    return updatedItem;
-};
-
-function remove(id) {
-  return db('order_detail')
-    .where({id})
-    .del();
-}

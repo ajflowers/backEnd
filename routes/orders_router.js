@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Orders = require('../models/orders-model.js');
+const OrderDetails = require('../models/order-details-model');
 
 const {validateCustomer, validateFarmer} = require('../auth/validate-roles.js');
 
@@ -44,25 +45,41 @@ router.get('/:id', (req, res) => {
     }
 }) 
 
-router.post('/', validateCustomer, (req, res) => {
+router.post('/', validateCustomer, async (req, res) => {
     const {farm_id, customer_name, customer_email, items_ordered} = req.body;
     const customer_id = req.decodedJwt.subject;
-    const role = req.decodedJwt.role;    
+    const now = new Date();
+    const order_date = now.toISOString();
 
-    Orders
-        .add({
-            customer_id,
-            farm_id,
-            customer_name,
-            customer_email,
-            order_date: Date.now()                               
-        })
-        .then(newOrder => {
-            let order_id = newOrder.id;
-            items_ordered.map
+    if (!items_ordered || items_ordered.length === 0) {
+        res.status(400).json({ message: 'You must select at least one item to place an order' });
+    } else {
+        try{
+            const newOrder = await Orders.add({
+                customer_id,
+                farm_id,
+                customer_name,
+                customer_email,
+                order_date 
+            });
 
-        })
-        .catch(err => res.status(500).json(err));
+            const newDetails = await Promise.all(items_ordered.map(async item => 
+                await OrderDetails.add({
+                    order_id: newOrder.id,
+                    item: item.item, //oh god did I really type this line
+                    quantity: item.quantity
+                })
+            ));
+
+            res.status(201).json({
+                ...newOrder,
+                items_ordered: newDetails
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).json(error);
+        }
+    }  
 
 });
 
