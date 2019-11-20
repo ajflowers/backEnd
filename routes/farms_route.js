@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
             })
             .catch(err => res.status(500).json(err));
     } else {
-        res.status(401).json({ message: 'You do not have the correct user role for this action.' });
+        res.status(401).json({ message: 'Invalid user role.' });
     }
 });
 

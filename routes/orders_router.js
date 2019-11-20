@@ -1,6 +1,9 @@
 const router = require('express').Router();
 const Orders = require('../models/orders-model.js');
 
+const {validateCustomer, validateFarmer} = require('../auth/validate-roles.js');
+
+
 
 router.get('/', (req, res) => {
     const role = req.decodedJwt.role;
@@ -41,25 +44,26 @@ router.get('/:id', (req, res) => {
     }
 }) 
 
-router.post('/', (req, res) => {
-    const newItem = req.body;
+router.post('/', validateCustomer, (req, res) => {
+    const {farm_id, customer_name, customer_email, items_ordered} = req.body;
     const customer_id = req.decodedJwt.subject;
-    const role = req.decodedJwt.role;
+    const role = req.decodedJwt.role;    
 
-    if (role === 'customer') {
-        Orders
-            .add({
-                ...newItem,
-                customer_id
-            })
-            .then(added => {
-                res.status(201).json(added);
-            })
-            .catch(err => res.status(500).json(err));
+    Orders
+        .add({
+            customer_id,
+            farm_id,
+            customer_name,
+            customer_email,
+            order_date: Date.now()                               
+        })
+        .then(newOrder => {
+            let order_id = newOrder.id;
+            items_ordered.map
 
-    } else {
-        res.status(401).json({ message: 'You do not have the correct user role for this action.' });
-    }
+        })
+        .catch(err => res.status(500).json(err));
+
 });
 
 router.put('/:id', (req, res) => {
