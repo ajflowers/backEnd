@@ -5,6 +5,7 @@ module.exports = {
   find,
   findBy,
   findById,
+  findByOrder
 };
 
 function find() {
@@ -12,7 +13,7 @@ function find() {
 };
 
 function findBy(filter) {
-  return db("order_details").where(filter);
+  return db("order_details").where(filter).select();
 };
 
 async function add(item) {
@@ -29,3 +30,9 @@ function findById(id) {
     .first()
     .select();
 };
+
+function findByOrder(order_id) {
+  return db("order_details")
+    .where({ order_id })
+    .select();
+}

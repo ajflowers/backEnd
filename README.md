@@ -37,14 +37,18 @@ Each takes a JSON object with `username` and `password` keys:
 
 - `DELETE /api/inventory/:inventoryID`
 
+- `PUT /api/orders/:orderID` update order status (boolean, default false on all new orders):
+    - `{"filled" : true}` when order is filled and ready to pick up
+    - `{"picked_up": true }` when order has been picked up by customer
+
 ## Protected endpoints for users logged in as customer:
 
 - `GET /api/farms` returns list of farms (excluding those with `farm_name: null`)
 
 - `GET /api/inventory/:farmID` returns all inventory for specified farm ID
 
-- `PUT /api/orders` creates new order by taking an object of the type:
-```
+- `POST /api/orders` creates new order by taking an object of the type:
+```js
 {
     "farm_id": 2, //farm being ordered from
     "customer_name": "Alice",
@@ -63,3 +67,10 @@ Each takes a JSON object with `username` and `password` keys:
     ] 
 }
 ```
+
+## Protected endpoints for either user type:
+
+- `GET /api/orders` returns all orders for logged in customer or farmer
+
+- `GET /api/orders/:orderID` returns order details including items for single order
+    - must be logged in as the customer who placed the order or as the farmer who received the order; will reject other users

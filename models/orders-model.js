@@ -35,7 +35,7 @@ function findById(id) {
 async function update(newInfo, id) {
     const [updatedItem] = await db("orders")
         .where({ id })
-        .update(newInfo, ["id", "item", "quantity"]);
+        .update(newInfo, ["*"]);
         
     return updatedItem;
 };
