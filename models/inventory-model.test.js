@@ -14,30 +14,30 @@ describe("inventory model", function() {
         });
 
         it("should add a produce item", async function() {
-            await insert({ item: kale })
+            await add({ item: "kale" })
 
             const inventory = await db("inventory");
             expect(inventory).toHaveLength(1);
         });
 
         it("should add the provided produce item", async function() {
-            await insert({ item: "chard" });
-            await insert({ item: "turnips" })
+            await add({ item: "chard" });
+            await add({ item: "turnips" })
 
             const inventory = await db("inventory");
 
-            expect(inventory).tohaveLength(2);
+            expect(inventory).toHaveLength(2);
             expect(inventory[0].item).toBe("chard");
             expect(inventory[1].item).toBe("turnips");
         });
 
         it("should return the added produce item", async function() {
-            let inventory = await insert({ item: "chard" });
+            let inventory = await add({ item: "chard" });
 
             expect(inventory.item).toBe("chard");
             expect(inventory.id).toBeDefined();
 
-            inventory = await insert({ item: "turnips" });
+            inventory = await add({ item: "turnips" });
             expect(inventory.item).toBe("turnips");
             expect(inventory.id).toBeDefined();
         });
