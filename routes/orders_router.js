@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Orders = require('../models/orders-model.js');
-const OrderDetails = require('../models/order-details-model');
+const OrderDetails = require('../models/order-details-model.js');
+
 
 const {validateCustomer, validateFarmer} = require('../auth/validate-roles.js');
 
