@@ -28,7 +28,7 @@ server.use('/api/orders', validateToken, ordersRouter);
 
 
 server.get('/', (req, res) => {
-    res.send('Server is alive!');
+    res.status(200).json({ message: 'Server is alive!' });
 });
 
 module.exports = server;

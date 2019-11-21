@@ -16,7 +16,7 @@ describe("server", function() {
                         expect(res.status).toBe(200)
                     });
         });
-        // the enpoint returns the correct data format
+        // the endpoint returns the correct data format
         it("should return JSON formatted response", function() {
             return request(server)
                     .get("/")
@@ -25,11 +25,13 @@ describe("server", function() {
                     });
         });
         // the endpoint returns the right data in the body based on input
-        it("should return an 'api property with the value 'up' inside the body", function() {
+        it("should return an 'api property with the value 'Server is alive!' inside the body", function() {
             return request(server)
                     .get("/")
                     .then(res => {
-                        expect(res.body).toEqual({ api: "up" })
+                        // expect(res.body).toEqual({ message: 'Server is alive!', environment: process.env.DB_ENV })
+                        expect(res.body).toEqual({ message: 'Server is alive!' })
+
                     });
         })
     })
