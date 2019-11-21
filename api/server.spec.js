@@ -25,7 +25,7 @@ describe("server", function() {
                     });
         });
         // the endpoint returns the right data in the body based on input
-        it("should return an 'api property with the value 'Server is alive!' inside the body", function() {
+        it("should return an 'message property with the value 'Server is alive!' inside the body", function() {
             return request(server)
                     .get("/")
                     .then(res => {
