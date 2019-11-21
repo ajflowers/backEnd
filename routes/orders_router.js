@@ -4,6 +4,7 @@ const OrderDetails = require('../models/order-details-model');
 
 const {validateCustomer, validateFarmer} = require('../auth/validate-roles.js');
 
+const { validateStock } = require('../helpers/orders_helper.js');
 
 
 router.get('/', (req, res) => {
