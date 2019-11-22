@@ -4,14 +4,15 @@
 
 ## Unprotected endpoints: Registration/login
 
-Each takes a JSON object with `username` and `password` keys:
+Registration endpoints each accept a JSON object with `username` and `password` keys:
+- `POST /api/customers/register`
 - `POST /api/farmers/register`
     - farmer registration has optional `farm_name` and `farm_address` keys (farm info can be provided w/ registration, or can default to null for farmer to add info later)
-- `POST /api/farmers/login`
-- `POST /api/customers/register`
+
+Login endpoints also accept `username` and `password` keys; they will return a JSON web token in the body of the response. This JWT will identify the user's ID and role to the protected endpoints below: 
 - `POST /api/customers/login`
-
-
+- `POST /api/farmers/login`
+    
 
 ## Protected endpoints for users logged in as farmer:
 
@@ -24,7 +25,8 @@ Each takes a JSON object with `username` and `password` keys:
 }```
 
 - `PUT /api/farms`
-    - Updates farm info; farm ID will be provided by farmer token. takes `farm_name` and/or `farm_address` key/value pairs in JSON object.
+    - Updates farm info for the logged-in farmer; farm ID will be provided by farmer token. takes `farm_name` and/or `farm_address` key/value pairs in JSON object.
+    - _Note: there is no POST request to create a new farm. The farm name/address are stored_
 
 - `POST /api/inventory`
     - adds new inventory item, example: `{ item: "apples", quantity: 100 }` - returns new inventory item with unique id (inventory id numbers are unique to each entry and are not repeated between farmers)

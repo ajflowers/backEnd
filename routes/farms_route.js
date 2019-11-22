@@ -46,10 +46,10 @@ router.get('/:farmID', validateCustomer, (req, res) => {
 // update farm info for the logged-in farmer
 router.put('/', (req, res) => {
     const farmerID = req.decodedJwt.subject;
-    const newInfo = req.body;
+    const { farm_name, farm_address } = req.body;
         
     Farms
-        .update(newInfo, farmerID)
+        .update({ farm_name, farm_address }, farmerID)
         .then(saved => {
             console.log(saved);
             res.status(201).json(saved);

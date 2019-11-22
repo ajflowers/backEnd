@@ -1,7 +1,8 @@
-const request = require('supertest');
+// const request = require('supertest');
 
-const server = require('./server.js');
+// const server = require('./server.js');
 
-describe("user router", function() {
+// describe("customer router", function() {
+    
 
-})
+// })
