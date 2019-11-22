@@ -30,53 +30,40 @@ router.get('/:id', validateCustomer, (req, res) => {
         .catch(err => res.status(500).json(err));
 }) 
 
-router.post('/', (req, res) => {
+router.post('/', validateFarmer, (req, res) => {
     const newItem = req.body;
     const farm_id = req.decodedJwt.subject;
-    const role = req.decodedJwt.role
-    if (role === 'farmer') {
-        Inventory
-            .add({
-                ...newItem,
-                farm_id
-            })
-            .then(added => {
-                res.status(201).json(added);
-            })
-            .catch(err => res.status(500).json(err));
-
-    } else {
-        res.status(401).json({ message: 'You do not have the correct user role for this action.' });
-    }
+    
+    Inventory
+        .add({
+            ...newItem,
+            farm_id
+        })
+        .then(added => {
+            res.status(201).json(added);
+        })
+        .catch(err => res.status(500).json(err));
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', validateFarmer, (req, res) => {
     const id = req.params.id;
     const newInfo = req.body;
     
-    if (req.decodedJwt.role === 'farmer') {
-        Inventory.update(newInfo, id)
-            .then(updated => {
-                res.status(201).json(updated);
-            })
-            .catch(err => res.status(500).json(err));
-    } else {
-        res.status(401).json({ message: 'You do not have the correct user role for this action.' });
-    }
+    Inventory.update(newInfo, id)
+        .then(updated => {
+            res.status(201).json(updated);
+        })
+        .catch(err => res.status(500).json(err));
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', validateFarmer, (req, res) => {
     const id = req.params.id;
     
-    if (req.decodedJwt.role === 'farmer') {
-        Inventory.remove(id)
-            .then(count => {
-                res.status(201).json(count);
-            })
-            .catch(err => res.status(500).json(err));
-    } else {
-        res.status(401).json({ message: 'You do not have the correct user role for this action.' });
-    }
+    Inventory.remove(id)
+        .then(count => {
+            res.status(201).json(count);
+        })
+        .catch(err => res.status(500).json(err));
 });
 
 
